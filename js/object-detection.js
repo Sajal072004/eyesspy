@@ -132,9 +132,9 @@ function displayImages1(jsonData) {
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
       const pixel = imageData[x][y];
-      imageDataObj.data[i ] = pixel[0];  // Red
+      imageDataObj.data[i +2] = pixel[0];  // Red
       imageDataObj.data[i + 1] = pixel[1];  // Green
-      imageDataObj.data[i+2] = pixel[2];
+      imageDataObj.data[i] = pixel[2];
       imageDataObj.data[i + 3] = 255;        // Alpha (fully opaque)
       i += 4;
     }
