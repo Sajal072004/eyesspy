@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Image from JSON</title>
+  <style>
+    #image-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index:-1;
+    transform: rotate(-90deg) scaleX(-1);}
+  </style>
+</head>
+
+<body>
+  <div id="image-container"></div>
+
+
+  <script>
+    const itemMap = {
+      0: 'person',
+      1: 'bicycle',
+      2: 'car',
+      3: 'motorcycle',
+      4: 'airplane',
+      5: 'bus',
+      6: 'train',
+      7: 'truck',
+      8: 'boat',
+      9: 'traffic light',
+      10: 'fire hydrant',
+      11: 'stop sign',
+      12: 'parking meter',
+      13: 'bench',
+      14: 'bird',
+      15: 'cat',
+      16: 'dog',
+      17: 'horse',
+      18: 'sheep',
+      19: 'cow',
+      20: 'elephant',
+      21: 'bear',
+      22: 'zebra',
+      23: 'giraffe',
+      24: 'backpack',
+      25: 'umbrella',
+      26: 'handbag',
+      27: 'tie',
+      28: 'suitcase',
+      29: 'frisbee',
+      30: 'skis',
+      31: 'snowboard',
+      32: 'sports ball',
+      33: 'kite',
+      34: 'baseball bat',
+      35: 'baseball glove',
+      36: 'skateboard',
+      37: 'surfboard',
+      38: 'tennis racket',
+      39: 'bottle',
+      40: 'wine glass',
+      41: 'cup',
+      42: 'fork',
+      43: 'knife',
+      44: 'spoon',
+      45: 'bowl',
+      46: 'banana',
+      47: 'apple',
+      48: 'sandwich',
+      49: 'orange',
+      50: 'broccoli',
+      51: 'carrot',
+      52: 'hot dog',
+      53: 'pizza',
+      54: 'donut',
+      55: 'cake',
+      56: 'chair',
+      57: 'couch',
+      58: 'potted plant',
+      59: 'bed',
+      60: 'dining table',
+      61: 'toilet',
+      62: 'tv',
+      63: 'laptop',
+      64: 'mouse',
+      65: 'remote',
+      66: 'keyboard',
+      67: 'cell phone',
+      68: 'microwave',
+      69: 'oven',
+      70: 'toaster',
+      71: 'sink',
+      72: 'refrigerator',
+      73: 'book',
+      74: 'clock',
+      75: 'vase',
+      76: 'scissors',
+      77: 'teddy bear',
+      78: 'hair drier',
+      79: 'toothbrush'
+    };
+
+    function displayImages(jsonData) {
+      // Assuming just one image in the data
+      const imageData = jsonData.image;
+      const width = imageData.length;
+      const height = imageData[0].length;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+
+      const ctx = canvas.getContext('2d');
+
+
+      const imageDataObj = ctx.createImageData(width, height);
+
+      let i = 0;
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          const pixel = imageData[x][y];
+          imageDataObj.data[i + 2] = pixel[0];  // Red
+          imageDataObj.data[i + 1] = pixel[1];  // Green
+          imageDataObj.data[i] = pixel[2];
+          imageDataObj.data[i + 3] = 255;        // Alpha (fully opaque)
+          i += 4;
+        }
+      }
+
+
+
+
+      imageContainer.appendChild(canvas);
+
+      // Draw boxes (modified to include labels)
+      const boxes = jsonData.box;
+      for (const box of boxes) {
+        const [x1, y1, x2, y2] = box;
+
+        // Calculate box dimensions 
+        const centerX = (x1 + x2) / 4;
+        const centerY = (y1 + y2) / 4;
+        const halfWidth = (x2 - x1) / 4;
+        const halfHeight = (y2 - y1) / 4;
+
+        // Draw the rectangle
+        ctx.strokeStyle = 'red';
+        ctx.lineWidth = 3;
+
+        ctx.strokeRect(centerX - halfWidth, centerY - halfHeight, halfWidth * 2, halfHeight * 2);
+
+
+
+        // Draw Label
+        const label = jsonData.label;
+        const item = itemMap[label];
+
+        if (item) {
+          ctx.font = '14px Arial';
+          ctx.fillStyle = 'green';
+          ctx.fillText(`${item}`, x1, y1 - y1 / 3);
+        } else {
+          console.warn("Label not found in itemMap:", label);
+        }
+      }
+
+
+    }
+
+    function displayImages1(jsonData) {
+      // Assuming just one image in the data
+      const imageData = jsonData.image;
+      const width = imageData.length;
+      const height = imageData[0].length;
+      console.log(jsonData.label);
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+
+      const ctx = canvas.getContext('2d');
+
+
+      const imageDataObj = ctx.createImageData(width, height);
+
+      let i = 0;
+      for (let y = 0; y <height;y++) {
+        for (let x = 0; x <width; x++) {
+          const pixel = imageData[x][y];
+          imageDataObj.data[i + 2] = pixel[0];  // Red
+          imageDataObj.data[i + 1] = pixel[1];  // Green
+          imageDataObj.data[i] = pixel[2];
+          imageDataObj.data[i + 3] = 255;        // Alpha (fully opaque)
+          i += 4;
+        }
+      }
+
+      
+
+
+      ctx.putImageData(imageDataObj, 0, 0);
+
+
+      imageContainer.appendChild(canvas);
+      // let element = document.getElementById('image-container')
+      // element.style.rotate = "90deg";
+      // element.style.transform = "scaleY(-1)";
+      
+      
+
+      
+
+      const boxes = jsonData.box;
+      // for (const box of boxes) {
+      //   const [x1, y1, x2, y2] = box;
+
+      //   //Calculate box dimensions 
+        
+      //   // Draw the rectangle
+      //   ctx.strokeStyle = 'red';
+      //   ctx.lineWidth = 3;
+      //   ctx.strokeRect(y1,x1, (y2-y1),(x2-x1));
+
+      //   // Draw Label
+      //   const label = (jsonData.label);
+      //   const item = itemMap[label[0]];
+      //   console.log(label , item);
+      //   if (item) {
+      //     ctx.font = '14px Arial';
+      //     ctx.fillStyle = 'green';
+      //     ctx.fillText(`${item}`, y1, x1);
+      //   } else {
+      //     console.warn("Label not found in itemMap:", label);
+      //   }
+      // }
+
+      let ww = boxes.length;
+      for(var z = 0; z<ww; z++){
+        const [x1, y1, x2, y2] = boxes[z];
+        ctx.strokeStyle = 'red';
+        ctx.lineWidth = 3;
+        ctx.strokeRect(y1,x1, (y2-y1),(x2-x1));
+        ctx.save();
+        ctx.translate(x1, y1)
+        ctx.rotate(1.57);
+        ctx.scale(1,-1)
+        
+        const label = jsonData.label;
+        const item = itemMap[(label[z])];
+        console.log(label , item);
+
+        if (item) {
+          
+          ctx.font = '20px Arial';
+          ctx.fillStyle = 'red';
+          
+          ctx.fillText(`${item}`, x1/10,55);
+          
+        } else {
+          console.warn("Label not found in itemMap:", label);
+
+      }
+
+      ctx.restore();
+
+
+    }
+  }
+
+
+    const imageContainer = document.getElementById('image-container');
+
+
+
+
+
+
+    fetch('trial5.json')
+      .then(response => response.json())
+      .then(jsonData => displayImages1(jsonData))
+      .catch(error => console.error('Error loading JSON data:', error));
+
+  </script>
+</body>
+
+</html>
