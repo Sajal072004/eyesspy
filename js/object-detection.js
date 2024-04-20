@@ -207,8 +207,8 @@ function displayImages1(jsonData) {
 const imageContainer = document.getElementById('image-container');
 
 setInterval(function () {
-  const local = 'http://10.0.0.253:5000/data';
-  fetch('test/trial8.json')
+  const local = 'http://192.168.144.230:5000/data';
+  fetch(local)
     .then(response => response.json())
     .then(jsonData => {
       imageContainer.innerHTML = ''; console.log(jsonData.boxes);
